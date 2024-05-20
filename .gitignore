@@ -1,0 +1,5 @@
+data/
+output/
+logs/
+.idea/
+.ipynb_checkpoints/
