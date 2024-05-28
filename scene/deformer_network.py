@@ -160,12 +160,14 @@ class ForwardDeformer(nn.Module):
         for i, l in enumerate(self.linear_front):
             front_x = self.linear_front[i](front_x)
             front_x = self.leaky_relu(front_x)
+            # front_x = self.softplus(front_x)
 
         d_scaling = front_x.clone()
         
         for i, l in enumerate(self.scale_head):
             d_scaling = self.scale_head[i](d_scaling)
             d_scaling = self.leaky_relu(d_scaling)
+            # d_scaling = self.softplus(d_scaling)
         d_scaling = F.sigmoid(d_scaling)  # [Num, 3]
 
         d_rotation = front_x.clone()
@@ -173,6 +175,7 @@ class ForwardDeformer(nn.Module):
         for i, l in enumerate(self.rotation_head):
             d_rotation = self.rotation_head[i](d_rotation)
             d_rotation = self.leaky_relu(d_rotation)
+            # d_rotation = self.softplus(d_rotation)
         d_rotation = F.normalize(d_rotation, p=2, dim=1)  # [Num, 4]
 
         flame_loss_pack = {

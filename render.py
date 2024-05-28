@@ -111,7 +111,9 @@ if __name__ == "__main__":
     
     args = get_combined_args(parser)
     print("Rendering " + args.model_path)
-    reenact_path = "/root/autodl-tmp/myself"
+    reenact_path = '/root/autodl-tmp/myself1'
+    #reenact_path = '/root/autodl-tmp/id8'
+    # reenact_path = None
     # Initialize system state (RNG)
     safe_state(args.quiet)
 

@@ -43,7 +43,7 @@ class MyDeformModel:
              "name": "deform"}]
         self.optimizer = torch.optim.Adam(l, lr=0.0, eps=1e-15)
         self.deform_scheduler_args = get_expon_lr_func(lr_init=training_args.position_lr_init * self.spatial_lr_scale,
-                                                       lr_final=training_args.position_lr_final * 0.1,
+                                                       lr_final=training_args.position_lr_final * 0.5,
                                                        lr_delay_mult=training_args.position_lr_delay_mult,
                                                        max_steps=training_args.deform_lr_max_steps)
         

@@ -140,7 +140,7 @@ def readNerfBlendShapeCameras(path, is_eval, is_debug, novel_view, only_head, re
             re_json = json.load(f)
             print("Load expression parameter from ", reenact_path)
             re_frames = re_json['frames']
-            # re_frames = re_frames[-50:]  # 取最后50帧做reenact
+            re_frames = re_frames[-50:]  # 取最后50帧做reenact
     # --------------------for reenact task--------------------
     
     # 新数据集 -50
@@ -169,10 +169,10 @@ def readNerfBlendShapeCameras(path, is_eval, is_debug, novel_view, only_head, re
     if reenact_path is not None:
         for idx, frame in enumerate(tqdm(re_frames, desc="Loading reenactment camera into memory in advance")):
             image_id = frame['img_id']
-            image_path = os.path.join(reenact_path, "ori_imgs", str(image_id+1) + '.png')
+            image_path = os.path.join(reenact_path, "ori_imgs", str(image_id) + '.png')
             image = np.array(Image.open(image_path))
             if not only_head:
-                mask_path = os.path.join(reenact_path, "mask", str(image_id+1) + '.png')
+                mask_path = os.path.join(reenact_path, "mask", str(image_id) + '.png')
                 seg = cv.imread(mask_path, cv.IMREAD_GRAYSCALE)
                 mask = np.repeat(np.asarray(seg)[:, :, None], 3, axis=2) / 255
             else:
@@ -199,8 +199,11 @@ def readNerfBlendShapeCameras(path, is_eval, is_debug, novel_view, only_head, re
                 if idx == 1:
                     print("pose.shape=", pose.shape)
 
-            # transform_matrix就选训练集中第一个作为参考
+            
             c2w = np.array(frames[0]['transform_matrix'])
+            # print(c2w)
+            # c2w = np.array(frame['transform_matrix'])
+            
             c2w[:3, 1:3] *= -1
             # 世界坐标系到相机坐标系的变换
             w2c = np.linalg.inv(c2w)
@@ -242,6 +245,12 @@ def readNerfBlendShapeCameras(path, is_eval, is_debug, novel_view, only_head, re
 
             expression = np.array(frame['expression'])
             pose = np.array(frame['pose'])
+            
+            # MICA推理的pose长度为6，使用默认eyeball和neck pose
+            default_eyeball_pose = np.zeros(6)
+            default_neck_pose = np.zeros(3)
+            if pose.shape[0] == 6:
+                pose = np.concatenate([pose[:3], default_neck_pose, pose[3:], default_eyeball_pose])
 
             if novel_view:
                 vec=np.array([0,0,0.3493212163448334])
@@ -254,6 +263,8 @@ def readNerfBlendShapeCameras(path, is_eval, is_debug, novel_view, only_head, re
                 c2w = tmp_pose
             else:
                 c2w = np.array(frame['transform_matrix'])
+            
+            # print(c2w)
             c2w[:3, 1:3] *= -1
             # 世界坐标系到相机坐标系的变换
             w2c = np.linalg.inv(c2w)

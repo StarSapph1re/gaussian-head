@@ -98,6 +98,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, is_debug
             flame_loss_pack = None
         else:
             xyz_deformed, d_scaling, d_rotation, flame_loss_pack = deform.step(gaussians.get_xyz, exp, pose)
+            flame_loss_pack = None
         
             
 

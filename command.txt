@@ -1,22 +1,23 @@
 训练
+python ./train.py -s /root/autodl-tmp/id1 -m ./output/id1 --eval
 id9数据集，只有少量头部动作不大的数据，面部表情较多
 
 python ./train.py -s ./data/id9 -m ./output/id9-deform --eval
 
 id8数据集，完整版
 
-python ./train.py -s /root/autodl-tmp/id8 -m ./output/id8 --eval
+python ./train.py -s /root/autodl-tmp/id8 -m ./output/half-nflame --eval
 
 id8数据集，只有头部动作较大
 
-python ./train.py -s /root/autodl-tmp/id8-move -m ./output/id8-move --eval
+python ./train.py -s /root/autodl-tmp/id8-move -m ./output/id8m-infer --eval
+
+python ./train.py -s /root/autodl-tmp/myself1 -m ./output/myself1 --eval
 
 渲染（reenactment时修改render.py中的reenact_path）
 python render.py -m ./output/id8-move-0.01-32w  --skip_train
+python render.py -m ./output/id1  --skip_train
+python render.py -m ./output/id8-sp  --skip_train
 python render.py -m ./output/id8-move-0.1-24w  --skip_train
+python render.py -m ./output/id8m-infer  --skip_train
 
-deform_lr= 0.0004068219355394185 [06/05 09:08:31]
-deform_lr= 0.0002068801090450482 [06/05 09:14:43]
-deform_lr= 0.00010520420798289045 [06/05 09:22:16]
-deform_lr= 5.349922439811373e-05 [06/05 09:30:51]
-deform_lr= 2.72058225243729e-05 [06/05 09:39:19]
