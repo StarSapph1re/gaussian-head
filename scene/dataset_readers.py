@@ -140,11 +140,12 @@ def readNerfBlendShapeCameras(path, is_eval, is_debug, novel_view, only_head, re
             re_json = json.load(f)
             print("Load expression parameter from ", reenact_path)
             re_frames = re_json['frames']
-            re_frames = re_frames[-50:]  # 取最后50帧做reenact
+            # re_frames = re_frames[2300:2500]  # 取最后50帧做reenact
+            re_frames = re_frames[300:1000]
     # --------------------for reenact task--------------------
     
     # 新数据集 -50
-    test_frames = -50
+    test_frames = -500
     frames = meta_json['frames']
     total_frames = len(frames)
     
@@ -152,11 +153,14 @@ def readNerfBlendShapeCameras(path, is_eval, is_debug, novel_view, only_head, re
         print(f'Loading train dataset from {path}...')
         frames = frames[0 : (total_frames + test_frames)]
         if is_debug:
-            frames = frames[0: 50]
+            frames = frames[2300:2500]
+            #frames = frames[-50:]
     else:
         print(f'Loading test dataset from {path}...')
-        frames = frames[-50:]
+        frames = frames[2300:2500]
+        # frames = frames[-50:]
         if is_debug:
+            # frames = frames[-50:]
             frames = frames[-50:]
 
     cam_infos = []
@@ -169,6 +173,9 @@ def readNerfBlendShapeCameras(path, is_eval, is_debug, novel_view, only_head, re
     if reenact_path is not None:
         for idx, frame in enumerate(tqdm(re_frames, desc="Loading reenactment camera into memory in advance")):
             image_id = frame['img_id']
+            # 原始数据集
+            # image_path = os.path.join(reenact_path, "ori_imgs", str(image_id - 1) + '.jpg')
+            # IMAvatar推理
             image_path = os.path.join(reenact_path, "ori_imgs", str(image_id) + '.png')
             image = np.array(Image.open(image_path))
             if not only_head:
@@ -190,20 +197,24 @@ def readNerfBlendShapeCameras(path, is_eval, is_debug, novel_view, only_head, re
 
             expression = np.array(frame['expression'])
             pose = np.array(frame['pose'])
-
-            # MICA推理的pose长度为6，使用默认eyeball和neck pose
-            default_eyeball_pose = np.zeros(6)
-            default_neck_pose = np.zeros(3)
-            if pose.shape[0] == 6:
-                pose = np.concatenate([pose[:3], default_neck_pose, pose[3:], default_eyeball_pose])
-                if idx == 1:
-                    print("pose.shape=", pose.shape)
-
+            
+            # novel_view = True
+            # if novel_view:
+            #     vec=np.array([0,0,0.3493212163448334])
+            #     rot_cycle=100
+            #     tmp_pose=np.identity(4,dtype=np.float32)
+            #     r1 = Rotation.from_euler('y', 15+(-30)*((idx % rot_cycle)/rot_cycle), degrees=True)
+            #     tmp_pose[:3,:3]=r1.as_matrix()
+            #     trans=tmp_pose[:3,:3]@vec
+            #     tmp_pose[0:3,3]=trans
+            #     c2w = tmp_pose
+            
+            # 本人相机外参
             
             c2w = np.array(frames[0]['transform_matrix'])
-            # print(c2w)
+            # 驱动者相机外参
             # c2w = np.array(frame['transform_matrix'])
-            
+
             c2w[:3, 1:3] *= -1
             # 世界坐标系到相机坐标系的变换
             w2c = np.linalg.inv(c2w)
@@ -246,12 +257,6 @@ def readNerfBlendShapeCameras(path, is_eval, is_debug, novel_view, only_head, re
             expression = np.array(frame['expression'])
             pose = np.array(frame['pose'])
             
-            # MICA推理的pose长度为6，使用默认eyeball和neck pose
-            default_eyeball_pose = np.zeros(6)
-            default_neck_pose = np.zeros(3)
-            if pose.shape[0] == 6:
-                pose = np.concatenate([pose[:3], default_neck_pose, pose[3:], default_eyeball_pose])
-
             if novel_view:
                 vec=np.array([0,0,0.3493212163448334])
                 rot_cycle=100
@@ -319,7 +324,7 @@ def readNeRFBlendShapeDataset(path, eval, is_debug, novel_view, only_head, reena
         # Since mono dataset has no colmap, we start with random points
         num_pts = 10_000
         print(f"Generating random point cloud ({num_pts})...")
-        xyz = np.random.random((num_pts, 3)) * 2.6 - 1.3
+        xyz = np.random.random((num_pts, 3)) * 2.6 - 3.18
         shs = np.random.random((num_pts, 3)) / 255.0
         pcd = BasicPointCloud(points=xyz, colors=SH2RGB(shs), normals=np.zeros((num_pts, 3)))
         storePly(ply_path, xyz, SH2RGB(shs) * 255)

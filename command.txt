@@ -1,5 +1,9 @@
 训练
-python ./train.py -s /root/autodl-tmp/id1 -m ./output/id1 --eval
+python ./train.py -s /root/autodl-tmp/id8 -m /root/autodl-tmp/id8-res --eval
+
+python ./train.py -s /root/autodl-tmp/me-exp -m /root/autodl-tmp/me-exp-res --eval
+
+python ./train.py -s /root/autodl-tmp/id1 -m /root/autodl-tmp/id1-mat-res  --eval
 id9数据集，只有少量头部动作不大的数据，面部表情较多
 
 python ./train.py -s ./data/id9 -m ./output/id9-deform --eval
@@ -15,9 +19,19 @@ python ./train.py -s /root/autodl-tmp/id8-move -m ./output/id8m-infer --eval
 python ./train.py -s /root/autodl-tmp/myself1 -m ./output/myself1 --eval
 
 渲染（reenactment时修改render.py中的reenact_path）
-python render.py -m ./output/id8-move-0.01-32w  --skip_train
+python render.py -m /root/autodl-tmp/id1-pretrain/id1  --skip_train
+
 python render.py -m ./output/id1  --skip_train
 python render.py -m ./output/id8-sp  --skip_train
 python render.py -m ./output/id8-move-0.1-24w  --skip_train
 python render.py -m ./output/id8m-infer  --skip_train
 
+
+
+
+
+python ./train.py -s /root/autodl-tmp/id1 -m ./output/inf-mat  --eval
+
+python render.py -m ./output/org-mat --skip_train
+
+python render.py -m ./output/inf-mat --skip_train

@@ -55,8 +55,8 @@ def render(viewpoint_camera, pc: GaussianModel, triplane: TriPlaneModel, pipe, b
 
     rasterizer = GaussianRasterizer(raster_settings=raster_settings)
 
-    # means3D = pc.get_xyz + d_xyz
-    means3D = xyz_deformed
+    means3D = pc.get_xyz + xyz_deformed
+    # means3D = xyz_deformed
     means2D = screenspace_points
 
      # If precomputed 3d covariance is provided, use it. If not, then it will be computed from

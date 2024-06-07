@@ -190,7 +190,7 @@ class ForwardDeformer(nn.Module):
         
         
 
-        return pnts_d, d_scaling / 100, d_rotation, flame_loss_pack
+        return pnts_d / 100, d_scaling / 100, d_rotation, flame_loss_pack
 
 
 

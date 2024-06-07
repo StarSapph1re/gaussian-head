@@ -61,6 +61,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, is_debug
     # 可视化相关
     name = "train_render"
     video_name = os.path.join(dataset.model_path, name, "output.mp4")
+    print("train_visual at",  video_name)
     fourcc = cv2.VideoWriter_fourcc(*"mp4v")
     fps = 30.0
     width, height = 512, 512
@@ -94,7 +95,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, is_debug
         pose = viewpoint_cam.pose
 
         if iteration < opt.warm_up:
-            xyz_deformed, d_scaling, d_rotation = gaussians.get_xyz, 0.0, 0.0
+            xyz_deformed, d_scaling, d_rotation = 0.0, 0.0, 0.0
             flame_loss_pack = None
         else:
             xyz_deformed, d_scaling, d_rotation, flame_loss_pack = deform.step(gaussians.get_xyz, exp, pose)
@@ -105,9 +106,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, is_debug
         # Render
         render_pkg_re = render(viewpoint_cam, gaussians, triplane, pipe, background, xyz_deformed, d_rotation, d_scaling,
                                iteration)
-        image, viewspace_point_tensor, visibility_filter, radii = render_pkg_re["render"], render_pkg_re[
-            "viewspace_points"], render_pkg_re[
-            "visibility_filter"], render_pkg_re["radii"]
+        image, viewspace_point_tensor, visibility_filter, radii = render_pkg_re["render"], render_pkg_re["viewspace_points"], render_pkg_re["visibility_filter"], render_pkg_re["radii"]
 
         gt_image = viewpoint_cam.original_image.cuda()
         # loss funcs
