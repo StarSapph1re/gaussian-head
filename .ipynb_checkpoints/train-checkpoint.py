@@ -291,7 +291,7 @@ def training_report(tb_writer, iteration, Ll1, loss, l1_loss, elapsed, testing_i
                 images = torch.cat((images, image.unsqueeze(0)), dim=0)
                 gts = torch.cat((gts, gt_image.unsqueeze(0)), dim=0)
 
-                if idx % 10 == 0:
+                if idx % 25 == 0:
                     save_image = torch.cat((gt_image, image), dim=2)
                     save_path = os.path.join(scene.model_path, 'eval')
                     os.makedirs(save_path, exist_ok=True)

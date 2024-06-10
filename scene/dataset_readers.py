@@ -145,23 +145,16 @@ def readNerfBlendShapeCameras(path, is_eval, is_debug, novel_view, only_head, re
     # --------------------for reenact task--------------------
     
     # 新数据集 -50
-    test_frames = -500
+    test_frames = -200
     frames = meta_json['frames']
     total_frames = len(frames)
     
     if not is_eval:
         print(f'Loading train dataset from {path}...')
         frames = frames[0 : (total_frames + test_frames)]
-        if is_debug:
-            frames = frames[2300:2500]
-            #frames = frames[-50:]
     else:
         print(f'Loading test dataset from {path}...')
-        frames = frames[2300:2500]
-        # frames = frames[-50:]
-        if is_debug:
-            # frames = frames[-50:]
-            frames = frames[-50:]
+        frames = frames[-100:]
 
     cam_infos = []
     h, w = meta_json['h'], meta_json['w']
@@ -324,7 +317,7 @@ def readNeRFBlendShapeDataset(path, eval, is_debug, novel_view, only_head, reena
         # Since mono dataset has no colmap, we start with random points
         num_pts = 10_000
         print(f"Generating random point cloud ({num_pts})...")
-        xyz = np.random.random((num_pts, 3)) * 2.6 - 3.18
+        xyz = np.random.random((num_pts, 3)) * 2.6
         shs = np.random.random((num_pts, 3)) / 255.0
         pcd = BasicPointCloud(points=xyz, colors=SH2RGB(shs), normals=np.zeros((num_pts, 3)))
         storePly(ply_path, xyz, SH2RGB(shs) * 255)

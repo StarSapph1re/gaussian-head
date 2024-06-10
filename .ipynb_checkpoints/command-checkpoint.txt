@@ -35,3 +35,9 @@ python ./train.py -s /root/autodl-tmp/id1 -m ./output/inf-mat  --eval
 python render.py -m ./output/org-mat --skip_train
 
 python render.py -m ./output/inf-mat --skip_train
+
+python ./train.py -s /root/autodl-tmp/id8 -m ./output/id8-inf-mat  --eval
+
+python ./train.py -s /root/autodl-tmp/id1 -m ./output/id1-inf-mat  --eval
+
+python ./train.py -s /root/autodl-tmp/me-full -m /root/autodl-tmp/me-full-inf --eval
